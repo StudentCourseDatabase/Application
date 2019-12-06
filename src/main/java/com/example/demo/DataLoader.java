@@ -56,5 +56,10 @@ public class DataLoader implements CommandLineRunner {
         studentRepository.save(student);
         course.setStudents(students);
         courseRepository.save(course);
+        course = new Course("Bootstrap", "Betty", "Essential front-end library for any developer");
+        courseRepository.save(course);
+        students = new HashSet<>();
+        course.setStudents(students);
+        courseRepository.save(course);
     }
 }

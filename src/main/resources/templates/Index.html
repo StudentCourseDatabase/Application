@@ -1,11 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html lang="en" xmlns:th= "http://www.thymeleaf.org">
+<head th:replace="base :: headstuff"></head>
 <body>
-<h2>Insecure Page</h2>
-<a href="/secure">Secure Page</a>
+<nav th:replace="base :: navbar"></nav>
+<div th:if="${courses.size() == 0}">
+    <h1>There's nothing here.</h1>
+    <p style="text-align: center;">Try a new search or return <a href="/">home</a></p>
+</div>
+<div class="container col-8">
+    <div id="accordion">
+        <div  th:each="course: ${courses}" class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <button th:text="${course.name}" class="btn btn-link" data-toggle="collapse" th:data-target="'#collapse_'+${course.id}" aria-expanded="true" aria-controls="collapseOne">
+                    </button>
+                </h5>
+            </div>
+
+            <div th:id="'collapse_'+${course.id}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <th:block th:each="student : ${course.students}">
+                            <li class="list-group-item" th:inline="text"><div class="col-md-5">[[${student.getFirstName()}]] [[${student.getLastName()}]]</div>
+                                <div class="col-md-5">[[${student.getDob()}]]</div>
+                                <div class="col-md-2 img-square-wrapper img-download">
+                                    <img class="card-img" th:src="${student.url}" alt="Headshot">
+                                    <a data-toggle="collapse" th:href="'#collapse_'+${student.id}" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                        <span style="font-size:1.25em;"><i class="fas fa-cog"></i></span>
+                                    </a>
+                                    <div class="collapse" th:id="'collapse_'+${student.id}">
+                                        <div class="card card-body card-menu card-body-collapse">
+                                            <a class="nav-link" role="button" th:href="@{/updateStudent/{id}(id=${student.id})}"><i class="fas fa-edit"></i></a>
+                                            <a class="nav-link" role="button" th:href="@{/deleteStudent/{id}(id=${student.id})}"><i class="fas fa-trash-alt"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </th:block>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer th:replace="base :: footer"></footer>
 </body>
+<th:block th:replace="base :: jslinks"></th:block>
 </html>

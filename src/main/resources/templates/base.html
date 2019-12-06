@@ -18,9 +18,10 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark" th:fragment="navbar">
     <a class="navbar-brand" href="/"><span style="font-size: 1.5em; padding-right: 10px;"><i class="far fa-building"></i></span>Courses</a>
     <div class="navbar-nav  ml-auto">
-        <a class="navbar-link" href="/addStudent">Add Student</a>
-        <a class="navbar-link" href="/addCourse">Add Course</a>
-        <a class="navbar-link" href="/viewAll">View All Students</a>
+        <a class="navbar-nav" href="/addStudent">Add Student</a>
+        <a class="navbar-nav" href="/addCourse">Add Course</a>
+        <a class="navbar-nav" href="/addlink">Register a Student</a>
+        <a class="navbar-nav" href="/viewAll">View All Students</a>
         <form class="form-inline my-2 my-lg-0" th:action="@{/search}" method="post">
             <input class="form-control mr-sm-2" type="search" name="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-light my-2 my-sm-0" type="submit"><i class="fas fa-search"></i></button>
