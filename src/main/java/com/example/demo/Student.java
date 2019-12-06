@@ -7,6 +7,7 @@ import java.util.Set;
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "student_id")
     private long id;
     private String firstName;
     private String lastName;
@@ -14,6 +15,10 @@ public class Student {
     private String url;
 
     @ManyToMany
+    @JoinTable(
+            name = "course_student",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id"))
     private Set<Course> courses;
 
     public Student() {

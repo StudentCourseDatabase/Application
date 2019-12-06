@@ -36,7 +36,7 @@ public class SecurityConfiguration extends
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/h2-console/**", "/register").permitAll()
+                .antMatchers( "/h2-console/**", "/register").permitAll()
                 .antMatchers("/admin").access("hasAuthority('ADMIN')")
                 .anyRequest().authenticated()
                 .and().formLogin().loginPage("/login").permitAll()

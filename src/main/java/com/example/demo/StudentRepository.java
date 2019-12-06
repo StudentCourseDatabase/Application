@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.ArrayList;
 
 public interface StudentRepository extends CrudRepository<Student, Long> {
-    ArrayList<Student> findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(String s);
+    ArrayList<Student> findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(String s, String s1);
 }
