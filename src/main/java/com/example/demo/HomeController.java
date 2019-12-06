@@ -160,7 +160,7 @@ public class HomeController {
         return "redirect:/";
     }
 
-    @RequestMapping("/login")
+    @GetMapping("/login")
     public String login(){
         return "login";
     }
