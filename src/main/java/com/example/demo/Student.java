@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -29,6 +30,7 @@ public class Student {
         this.lastName = lastName;
         this.dob = dob;
         this.url = url;
+        this.courses = new HashSet<>();
     }
 
     public Student(String firstName, String lastName, String dob, String url, Set<Course> courses) {
