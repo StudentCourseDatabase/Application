@@ -47,8 +47,9 @@ public class HomeController {
     }
     @PostMapping("/search")
     public String search(Model model, @RequestParam("search") String s){
-        model.addAttribute("courses", courseRepository.findAll());
-        return "index";
+        model.addAttribute("courses", courseRepository.findByNameContainingIgnoreCase(s));
+        model.addAttribute("students", studentRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(s,s));
+        return "search";
     }
     @RequestMapping("/")
     public String index(Model model){
@@ -60,6 +61,16 @@ public class HomeController {
     public String viewAll(Model model){
         model.addAttribute("students", studentRepository.findAll());
         return "viewAll";
+    }
+    @GetMapping("/addStudent")
+    public String addStudent(Model model){
+        model.addAttribute("student", new Student());
+        return "studentform";
+    }
+    @GetMapping("/addCourse")
+    public String addCourse(Model model){
+        model.addAttribute("course", new Course());
+        return "courseform";
     }
     @RequestMapping("/addlink")
     public String addlink(Model model){
@@ -110,7 +121,13 @@ public class HomeController {
     @PostMapping("processCourse")
     public String processCourse(@Valid @ModelAttribute Course course){
         courseRepository.save(course);
-        Set<Student> students = new HashSet<>();
+        Set<Student> students;
+        if(course.getStudents() == null){
+            students = new HashSet<>();
+        }
+        else {
+            students = new HashSet<>(course.getStudents());
+        }
         course.setStudents(students);
         courseRepository.save(course);
         return "redirect:/";
