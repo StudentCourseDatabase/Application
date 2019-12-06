@@ -123,7 +123,6 @@ public class HomeController {
         }
         student.setCourses(courses);
         studentRepository.save(student);
-        return "redirect:/";
 
         if(file.isEmpty()){
             studentRepository.save(student);
@@ -138,6 +137,7 @@ public class HomeController {
             e.printStackTrace();
             return "studentform";
         }
+        return "redirect:/";
     }
 
     @PostMapping("processCourse")
