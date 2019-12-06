@@ -28,6 +28,7 @@ public class HomeController {
     @Autowired
     CloudinaryConfig cloudc;
 
+
     @GetMapping("/register")
     public String showRegistrationPage(Model model) {
         model.addAttribute("user", new User());
@@ -50,29 +51,12 @@ public class HomeController {
         }
         return "index";
     }
-
-    @PostMapping("/process")
-    public String processJob(@Valid @ModelAttribute Student student, BindingResult result,
-                             @RequestParam("file") MultipartFile file){
-        if(result.hasErrors()){
-            return "studentform";
-        }
-        if(file.isEmpty()){
-            studentRepository.save(student);
-            return "redirect:/";
-        }
-        try{
-            Map uploadResult = cloudc.upload(file.getBytes(),
-                    ObjectUtils.asMap("resourcetype", "auto"));
-            student.setUrl(uploadResult.get("url").toString());
-            studentRepository.save(student);
-        }catch(IOException e){
-            e.printStackTrace();
-            return "studentform";
-        }
-        return "redirect:/";
+    @PostMapping("/search")
+    public String search(Model model, @RequestParam("search") String s){
+        model.addAttribute("courses", courseRepository.findByNameContainingIgnoreCase(s));
+        model.addAttribute("students", studentRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(s,s));
+        return "search";
     }
-
     @RequestMapping("/")
     public String index(Model model){
         model.addAttribute("courses", courseRepository.findAll());
@@ -83,6 +67,16 @@ public class HomeController {
     public String viewAll(Model model){
         model.addAttribute("students", studentRepository.findAll());
         return "viewAll";
+    }
+    @GetMapping("/addStudent")
+    public String addStudent(Model model){
+        model.addAttribute("student", new Student());
+        return "studentform";
+    }
+    @GetMapping("/addCourse")
+    public String addCourse(Model model){
+        model.addAttribute("course", new Course());
+        return "courseform";
     }
     @RequestMapping("/addlink")
     public String addlink(Model model){
@@ -114,6 +108,50 @@ public class HomeController {
         courseRepository.save(course);
         student.setCourses(courses);
         studentRepository.save(student);
+        return "redirect:/";
+    }
+    @PostMapping("processStudent")
+    public String processStudent(@Valid @ModelAttribute Student student, BindingResult result,
+                                 @RequestParam("file") MultipartFile file){
+        studentRepository.save(student);
+        Set<Course> courses;
+        if(student.getCourses() == null){
+            courses= new HashSet<>();
+        }
+        else {
+            courses= new HashSet<>(student.getCourses());
+        }
+        student.setCourses(courses);
+        studentRepository.save(student);
+        return "redirect:/";
+
+        if(file.isEmpty()){
+            studentRepository.save(student);
+            return "redirect:/";
+        }
+        try{
+            Map uploadResult = cloudc.upload(file.getBytes(),
+                    ObjectUtils.asMap("resourcetype", "auto"));
+            student.setUrl(uploadResult.get("url").toString());
+            studentRepository.save(student);
+        }catch(IOException e){
+            e.printStackTrace();
+            return "studentform";
+        }
+    }
+
+    @PostMapping("processCourse")
+    public String processCourse(@Valid @ModelAttribute Course course){
+        courseRepository.save(course);
+        Set<Student> students;
+        if(course.getStudents() == null){
+            students = new HashSet<>();
+        }
+        else {
+            students = new HashSet<>(course.getStudents());
+        }
+        course.setStudents(students);
+        courseRepository.save(course);
         return "redirect:/";
     }
 

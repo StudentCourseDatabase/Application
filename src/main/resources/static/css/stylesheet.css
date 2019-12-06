@@ -5,6 +5,16 @@
     padding-right: 0;
     width:100%;
 }
+.container {
+    padding-top: 20px;
+}
+.nav-pills > a{
+    background-color: white;
+}
+#pills-course-tab, #pills-students-tab {
+    background-color: black;
+    padding: 5px;
+}
 .card-body-collapse {
     height: 100%;
     padding: 0;
