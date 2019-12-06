@@ -52,10 +52,15 @@ public class HomeController {
         return "index";
     }
     @PostMapping("/search")
-    public String search(Model model, @RequestParam("search") String s){
-        model.addAttribute("courses", courseRepository.findByNameContainingIgnoreCase(s));
-        model.addAttribute("students", studentRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(s,s));
-        return "search";
+    public String search(Model model, @RequestParam("search") String s, @RequestParam("searchtype") int i){
+        if(i == 1){
+            model.addAttribute("courses", courseRepository.findByNameContainingIgnoreCase(s));
+            return "search";
+        }
+        else {
+            model.addAttribute("students", studentRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(s,s));
+            return "searchstudents";
+        }
     }
     @RequestMapping("/")
     public String index(Model model){
