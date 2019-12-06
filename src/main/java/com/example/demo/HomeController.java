@@ -1,13 +1,17 @@
 package com.example.demo;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Controller
@@ -21,6 +25,8 @@ public class HomeController {
     CourseRepository courseRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    CloudinaryConfig cloudc;
 
     @GetMapping("/register")
     public String showRegistrationPage(Model model) {
@@ -43,6 +49,28 @@ public class HomeController {
             model.addAttribute("message", "User Account Created");
         }
         return "index";
+    }
+
+    @PostMapping("/process")
+    public String processJob(@Valid @ModelAttribute Student student, BindingResult result,
+                             @RequestParam("file") MultipartFile file){
+        if(result.hasErrors()){
+            return "studentform";
+        }
+        if(file.isEmpty()){
+            studentRepository.save(student);
+            return "redirect:/";
+        }
+        try{
+            Map uploadResult = cloudc.upload(file.getBytes(),
+                    ObjectUtils.asMap("resourcetype", "auto"));
+            student.setUrl(uploadResult.get("url").toString());
+            studentRepository.save(student);
+        }catch(IOException e){
+            e.printStackTrace();
+            return "studentform";
+        }
+        return "redirect:/";
     }
 
     @RequestMapping("/")
